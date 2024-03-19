@@ -43,6 +43,7 @@ if csv_file and csv_file2:
     columns_to_plot = st.sidebar.multiselect('Select columns to plot', updated_df.columns) #dropdown bar that prompts the user to pick want data they want on the graph
     columns_to_plot2 = st.sidebar.multiselect('Select variables to plot', updated_df2.columns)
     title = st.sidebar.text_input('Enter a title for your chart')
+    scale = st.sidebar.number_input('Y axis Scale')
     time = df['Time']
     time2 = df2['Time']
     if st.button('Plot'):
@@ -67,7 +68,7 @@ if csv_file and csv_file2:
        ax1.set_xlabel('Time (sec)')
        ax2.set_ylim(0,1000) # making the limits on the secondary axis 
        ax1.set_xlim(0,350)
-       ax1.set_ylim(ymin=0) #setting min to 0 but allowing for any max limit based on the data
+       ax1.set_ylim(0, scale) #setting min to 0 but allowing for any max limit based on the data
        ax1.grid() #adds grid lines to the primary axis ONLY
        lines, labels = ax1.get_legend_handles_labels()
        lines2,labels2 = ax2.get_legend_handles_labels() # grabbing the lines and labels and then putting the legend below the graph with a shadow and 5 columns per row
