@@ -43,16 +43,20 @@ if csv_file and csv_file2:
     columns_to_plot = st.sidebar.multiselect('Select columns to plot', updated_df.columns) #dropdown bar that prompts the user to pick want data they want on the graph
     columns_to_plot2 = st.sidebar.multiselect('Select variables to plot', updated_df2.columns)
     title = st.sidebar.text_input('Enter a title for your chart')
-    scale = st.sidebar.number_input('Y axis Scale')
+    Scale = st.sidebar.number_input('Y axis Min')
+    scale = st.sidebar.number_input('Y axis Max')
+    Scalex = st.sidebar.number_input('X axis Min')
+    scalex = st.sidebar.number_input('X axis Max')
     time = df['Time']
     time2 = df2['Time']
     if st.button('Plot'):
-       fig, ax1 = plt.subplots() #creating the primary axis
-       ax2 = ax1.twinx()
+       with plt.ioff(): 
+          fig, ax1 = plt.subplots() #creating the primary axis
+          ax2 = ax1.twinx()
        for column in columns_to_plot: #looking into both variables of user selected columns
          if column == 'Basket Speed':
            # Create graph with secondary y-axis
-           ax2.plot(time,df['Basket Speed'], label ='Basket Speed', color = 'navy') #plotting basket speed and setting the label
+           ax2.plot(time, df['Basket Speed'], label ='Basket Speed', color = 'navy') #plotting basket speed and setting the label
          elif column != 'Basket Speed':
            
            ax1.plot(time, df[column], label = column) #plotting the rest of the columns on the primary axis
@@ -61,14 +65,14 @@ if csv_file and csv_file2:
           if column2 == 'Basket Speed File 2':
               ax2.plot(time2,df2['Basket Speed File 2'], label = 'Basket Speed File 2', color = 'dimgray')
           elif column2 != 'Basket Speed File 2':
-              ax1.plot(time2,df2[column2], label = column2)
+              ax1.plot(time2, df2[column2], label = column2)
     
        ax1.set_ylabel('Displacement(in x 1000) - Wobble Angle (deg x 1000)') #making axis labels 
        ax2.set_ylabel('Basket Speed (RPM)')
        ax1.set_xlabel('Time (sec)')
        ax2.set_ylim(0,1000) # making the limits on the secondary axis 
-       ax1.set_xlim(0,350)
-       ax1.set_ylim(0, scale) #setting min to 0 but allowing for any max limit based on the data
+       ax1.set_xlim(Scalex, scalex)
+       ax1.set_ylim(Scale, scale) #setting min to 0 but allowing for any max limit based on the data
        ax1.grid() #adds grid lines to the primary axis ONLY
        lines, labels = ax1.get_legend_handles_labels()
        lines2,labels2 = ax2.get_legend_handles_labels() # grabbing the lines and labels and then putting the legend below the graph with a shadow and 5 columns per row
@@ -79,6 +83,12 @@ if csv_file and csv_file2:
        #save it to a BytesIO object
        plt.title(title)
        st.pyplot(fig)
+       disconnect_zoom = zoom_factory(ax1, ax2)
+# Enable scrolling and panning with the help of MPL
+# Interactions library function like panhandler.
+       pan_handler = panhandler(fig)
+       st.display(fig.canvas)
+       
        
        #buf = io.BytesIO()
        #plt.savefig(buf, format='png')
@@ -93,3 +103,5 @@ if csv_file and csv_file2:
          #)
 
         
+
+
