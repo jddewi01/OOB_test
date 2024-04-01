@@ -83,11 +83,7 @@ if csv_file and csv_file2:
        #save it to a BytesIO object
        plt.title(title)
        st.pyplot(fig)
-       disconnect_zoom = zoom_factory(ax1, ax2)
-# Enable scrolling and panning with the help of MPL
-# Interactions library function like panhandler.
-       pan_handler = panhandler(fig)
-       st.display(fig.canvas)
+      
        
        
        #buf = io.BytesIO()
